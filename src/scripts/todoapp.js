@@ -1,12 +1,15 @@
 var todoApp = {};
 todoApp.myUserId = null;
-todoApp.todoRef = new Firebase("https://todo-app-with-auth.firebaseio.com/todos");
-// todoApp.todoRef.onAuth(function(authData) {
-  // if (authData) {
-    // myUserID = authData.facebook.id;
-    // $("#loginDiv").text(authData.facebook.displayName);
-  // }
-// });
+todoApp.firebaseUrl = "https://todo-app-with-auth.firebaseio.com";
+//  https://auth.firebase.com/v2/todo-app-with-auth.firebaseio.com/todos/auth/facebook/callback
+
+todoApp.todoRef = new Firebase(todoApp.firebaseUrl+"/todos");
+todoApp.todoRef.onAuth(function(authData) {
+  if (authData) {
+    myUserID = authData.facebook.id;
+    $("#loginDiv").text(authData.facebook.displayName);
+  }
+});
 todoApp.todoRef.on('child_added', function(snapshot){
 	var data = snapshot.val(),
 	title = data && data.title ? data.title : '';
@@ -21,10 +24,10 @@ todoInput.keypress(function(e){
 	if(e.keyCode != 13){
 		return;
 	}
-	// if(!todoApp.myUserId){
-		// alert('You must login to use this app.');
-		// return;
-	// }
+	if(!todoApp.myUserId){
+		alert('You must login to use this app.');
+		return;
+	}
 	if(todoInput.val()){
 		todoApp.todoRef.push({
 			userid: todoApp.myUserId,
@@ -39,6 +42,12 @@ todoInput.keypress(function(e){
 
 //Handle Login
 var loginElem = $('#login');
-loginElem.click(function() {
-  todoApp.todoRef.authWithOAuthPopup('facebook', function(){});
+loginElem.on('click', function() {
+	todoApp.todoRef.authWithOAuthPopup("facebook", function(error, authData) {
+	  if (error) {
+		console.log("Login Failed!", error);
+	  } else {
+		console.log("Authenticated successfully with payload:", authData);
+	  }
+	});
 });
