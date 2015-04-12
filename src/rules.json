@@ -1,0 +1,24 @@
+// REQUIREMENTS
+// User must be logged-in to read/write data
+// User cannot be spoofed
+// Data must be properly structured
+// Same todo cannot be added again
+
+
+{
+	"rules": {
+		"todos": {
+			"$userId":{
+    		".read": "auth != null && auth.uid === $userId",
+    		".write": "auth != null && auth.uid === $userId",
+    		"$todo":{
+    		  ".validate": "newData.hasChildren(['title', 'isActive']) && newData.child('title').isString() && newData.child('isActive').isBoolean()",
+    		  "title":{
+    		    ".validate": "!newData.exists()"  
+    		  }
+    		}
+			}
+		},
+		"users": {}
+	}
+}
