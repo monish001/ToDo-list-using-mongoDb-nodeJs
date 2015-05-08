@@ -1,0 +1,15 @@
+todos:{
+	userId: {
+		$todoId1: {
+			title: 'buy flowers for mother',
+			isActive: true
+		},
+		$todoId2: {
+			title: 'car wash',
+			isActive: true
+		}
+	}
+}
+
+users:{
+}

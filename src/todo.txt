@@ -1,0 +1,5 @@
+Todo
+> rules - title unique and not empty string, userid, 
+> fb login
+> Bootstrap 
+> Smacss
